@@ -1,36 +1,47 @@
-window.addEventListener("load", init)
-
-function init(){
-	var model = new Model;
-	var view = new View;
-	var controller = new Controller( model, view );
-	controller.bindEventListeners()
-}
-
-function Controller( model, view ){
-	this.model = model;
+function Controller( gameText, view ){
+	this.gameText = gameText;
 	this.view = view;
 };
 
 Controller.prototype = {
 	bindEventListeners: function(){
-		document.addEventListener("keyup", this.view.meow)
+		document.addEventListener("keyup", this.handleInput.bind(this))
 	},
-	yo: function(){
-		console.log("yo")
+	handleInput: function(e){
+		var code = e.keyCode
+		this.gameText.checkInput(code)
 	}
 }
 
-function Model(){
+// this is our model
+function GameText(){
+	this.text = "Salar Sucks!";
+}
+GameText.prototype = {
+	checkInput: function(keyCode){
+		console.log(keyCode)
+	},
+	getCharCode: function(){
 
-};
+	}
+}
 
-function View(){
-
-};
+function View(){};
 
 View.prototype = {
 	meow: function(){
-		console.log("meow")
+		console.log(this)
 	}
 }
+
+function init(){
+	var controller = new Controller( new GameText, new View );
+	controller.bindEventListeners()
+}
+
+window.addEventListener("load", init)
+
+
+
+
+
