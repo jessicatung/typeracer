@@ -1,5 +1,6 @@
-function Controller( gameText, view ){
+function Controller( gameText, tracker, view ){
 	this.gameText = gameText;
+	this.tracker = tracker;
 	this.view = view;
 };
 
@@ -9,7 +10,10 @@ Controller.prototype = {
 	},
 	handleInput: function(e){
 		var code = e.keyCode
-		this.gameText.checkInput(code)
+		var isCorrect = this.gameText.isCorrect(code)
+		if(isCorrect === true){
+			this.tracker.incrementCorrect()
+		}
 	}
 }
 
@@ -18,7 +22,7 @@ function GameText(){
 	this.text = "salar sucks";
 }
 GameText.prototype = {
-	checkInput: function(keyCode){
+	isCorrect: function(keyCode){
 		var letterToCheck = this.getCharCode(this.text[0]);
 
 		if(keyCode === letterToCheck){
@@ -34,6 +38,18 @@ GameText.prototype = {
 	}
 }
 
+// Tracker, keeps track of where in sentence the user is at
+function Tracker(){
+	this.correct = 0
+}
+
+Tracker.prototype = {
+	incrementCorrect: function(){
+		++this.correct
+	}
+}
+
+//
 function View(){};
 
 View.prototype = {
@@ -43,7 +59,7 @@ View.prototype = {
 }
 
 function init(){
-	var controller = new Controller( new GameText, new View );
+	controller = new Controller( new GameText, new Tracker, new View );
 	controller.bindEventListeners()
 }
 
