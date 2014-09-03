@@ -1,36 +1,79 @@
-window.addEventListener("load", init)
-
-function init(){
-	var model = new Model;
-	var view = new View;
-	var controller = new Controller( model, view );
-	controller.bindEventListeners()
-}
-
-function Controller( model, view ){
-	this.model = model;
+function Controller( gameText, tracker, view ){
+	this.gameText = gameText;
+	this.tracker = tracker;
 	this.view = view;
 };
 
 Controller.prototype = {
 	bindEventListeners: function(){
-		document.addEventListener("keyup", this.view.meow)
+		document.addEventListener("keypress", this.handleInput.bind(this))
 	},
-	yo: function(){
-		console.log("yo")
+	handleInput: function(e){
+		var keyCode = e.keyCode
+		var currentLetterIndex = this.tracker.correct
+		var isCorrect = this.gameText.isCorrect(keyCode, currentLetterIndex)
+		if(isCorrect === true){
+			this.tracker.incrementCorrect()
+			this.view.markAsCorrect(currentLetterIndex)
+		}
 	}
 }
 
-function Model(){
+// this is our model
+function GameText(){
+	this.text = "salarsucks";
+}
 
-};
+GameText.prototype = {
+	isCorrect: function(keyCode, currentLetterIndex){
+		var letterToCheck = this.getCharCode(this.text[currentLetterIndex]);
+		return keyCode === letterToCheck
+	},
 
-function View(){
+	getCharCode: function(letter){
+		return letter.charCodeAt(0)
+	}
+}
 
-};
+// Tracker, keeps track of where in sentence the user is at
+function Tracker(){
+	this.correct = 0
+}
+
+Tracker.prototype = {
+	incrementCorrect: function(){
+		++this.correct
+	}
+}
+
+// View stuff
+function View(){}
 
 View.prototype = {
-	meow: function(){
-		console.log("meow")
+	markAsCorrect: function(currentLetterIndex){
+		var gameText = this.getGameTextElement()
+		var letterElement = this.getLetter(currentLetterIndex, gameText)
+		// Adds class="correct" to appropriate span element
+		letterElement.className = "correct"
+	},
+
+	getGameTextElement: function(){
+		return document.getElementsByClassName("game-text")[0]
+	},
+
+	getLetter: function(currentLetterIndex, gameText){
+		return gameText.children[currentLetterIndex]
 	}
 }
+
+function init(){
+	var controller = new Controller( new GameText, new Tracker, new View );
+	controller.bindEventListeners()
+}
+
+window.addEventListener("load", init)
+
+
+
+
+
