@@ -22,6 +22,7 @@ Controller.prototype = {
 function GameText(){
 	this.text = "salar sucks";
 }
+
 GameText.prototype = {
 	isCorrect: function(keyCode, currentLetterIndex){
 		var letterToCheck = this.getCharCode(this.text[currentLetterIndex]);
@@ -50,17 +51,27 @@ Tracker.prototype = {
 	}
 }
 
-//
-function View(){};
+// View stuff
+function View(){}
 
 View.prototype = {
-	meow: function(){
-		console.log(this)
+	markAsCorrect: function(currentLetterIndex){
+		var gameText = this.getGameTextElement()
+		var letterElement = this.getLetter(currentLetterIndex, gameText)
+		letterElement.className = "correct"
+	},
+
+	getGameTextElement: function(){
+		return document.getElementsByClassName("game-text")[0]
+	},
+
+	getLetter: function(currentLetterIndex, gameText){
+		return gameText.children[currentLetterIndex]
 	}
 }
 
 function init(){
-	controller = new Controller( new GameText, new Tracker, new View );
+	var controller = new Controller( new GameText, new Tracker, new View );
 	controller.bindEventListeners()
 }
 
