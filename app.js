@@ -14,27 +14,22 @@ Controller.prototype = {
 		var isCorrect = this.gameText.isCorrect(keyCode, currentLetterIndex)
 		if(isCorrect === true){
 			this.tracker.incrementCorrect()
+			this.view.markAsCorrect(currentLetterIndex)
 		}
 	}
 }
 
 // this is our model
 function GameText(){
-	this.text = "salar sucks";
+	this.text = "salarsucks";
 }
 
 GameText.prototype = {
 	isCorrect: function(keyCode, currentLetterIndex){
 		var letterToCheck = this.getCharCode(this.text[currentLetterIndex]);
-
-		if(keyCode === letterToCheck){
-			console.log("meow")
-			return true;
-		} else{
-			console.log("wrong")
-			return false;
-		}
+		return keyCode === letterToCheck
 	},
+
 	getCharCode: function(letter){
 		return letter.charCodeAt(0)
 	}
@@ -58,6 +53,7 @@ View.prototype = {
 	markAsCorrect: function(currentLetterIndex){
 		var gameText = this.getGameTextElement()
 		var letterElement = this.getLetter(currentLetterIndex, gameText)
+		// Adds class="correct" to appropriate span element
 		letterElement.className = "correct"
 	},
 
