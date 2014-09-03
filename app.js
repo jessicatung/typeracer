@@ -5,7 +5,7 @@ function Controller( gameText, view ){
 
 Controller.prototype = {
 	bindEventListeners: function(){
-		document.addEventListener("keyup", this.handleInput.bind(this))
+		document.addEventListener("keypress", this.handleInput.bind(this))
 	},
 	handleInput: function(e){
 		var code = e.keyCode
@@ -15,14 +15,22 @@ Controller.prototype = {
 
 // this is our model
 function GameText(){
-	this.text = "Salar Sucks!";
+	this.text = "salar sucks";
 }
 GameText.prototype = {
 	checkInput: function(keyCode){
-		console.log(keyCode)
-	},
-	getCharCode: function(){
+		var letterToCheck = this.getCharCode(this.text[0]);
 
+		if(keyCode === letterToCheck){
+			console.log("meow")
+			return true;
+		} else{
+			console.log("wrong")
+			return false;
+		}
+	},
+	getCharCode: function(letter){
+		return letter.charCodeAt(0)
 	}
 }
 
