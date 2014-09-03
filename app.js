@@ -9,8 +9,9 @@ Controller.prototype = {
 		document.addEventListener("keypress", this.handleInput.bind(this))
 	},
 	handleInput: function(e){
-		var code = e.keyCode
-		var isCorrect = this.gameText.isCorrect(code)
+		var keyCode = e.keyCode
+		var currentLetterIndex = this.tracker.correct
+		var isCorrect = this.gameText.isCorrect(keyCode, currentLetterIndex)
 		if(isCorrect === true){
 			this.tracker.incrementCorrect()
 		}
@@ -22,8 +23,8 @@ function GameText(){
 	this.text = "salar sucks";
 }
 GameText.prototype = {
-	isCorrect: function(keyCode){
-		var letterToCheck = this.getCharCode(this.text[0]);
+	isCorrect: function(keyCode, currentLetterIndex){
+		var letterToCheck = this.getCharCode(this.text[currentLetterIndex]);
 
 		if(keyCode === letterToCheck){
 			console.log("meow")
